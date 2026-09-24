@@ -1,0 +1,42 @@
+name: UI tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Браузер"
+        type: choice
+        options: [chrome, firefox]
+        default: chrome
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Установить зависимости
+        run: pip install -r requirements.txt
+
+      - name: Запустить тесты
+        run: pytest --browser ${{ inputs.browser || 'chrome' }}
+
+      - name: Сформировать Allure-отчёт
+        if: always()
+        run: npx --yes allure-commandline@2 generate allure-results --clean -o allure-report
+
+      - name: Сохранить Allure-отчёт
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 14

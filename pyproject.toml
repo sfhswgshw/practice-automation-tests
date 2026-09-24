@@ -1,0 +1,13 @@
+[project]
+name = "practice-automation-tests"
+version = "1.0.0"
+description = "UI-автотесты для practice-automation.com (Python, Selenium, Pytest, Allure)"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "PL"]
+ignore = ["PLR2004", "PLR0913", "E501"]
