@@ -83,8 +83,11 @@ class BaseElement:
     # ---------- действия ----------
     def scroll_into_view(self, element: WebElement) -> WebElement:
         # Прокрутка к центру экрана: sticky-шапка сайта не перекрывает элемент.
+        # behavior: 'instant' обязателен — на сайте включён `scroll-behavior: smooth`,
+        # и без него клик происходит раньше, чем закончится анимация прокрутки.
         self.driver.execute_script(
-            "arguments[0].scrollIntoView({block: 'center', inline: 'center'});", element
+            "arguments[0].scrollIntoView({block: 'center', inline: 'center', behavior: 'instant'});",
+            element,
         )
         return element
 
@@ -140,13 +143,19 @@ class BasePage(BaseElement):
         with allure.step(f"Открыть страницу {self.url}"):
             self.driver.get(self.url)
             self.find_visible(self.HEADING)
+            self._disable_smooth_scroll()
         return self
 
     def reload(self):
         with allure.step("Перезагрузить страницу"):
             self.driver.refresh()
             self.find_visible(self.HEADING)
+            self._disable_smooth_scroll()
         return self
+
+    def _disable_smooth_scroll(self) -> None:
+        """Отключает плавную прокрутку сайта, чтобы автопрокрутка WebDriver была мгновенной."""
+        self.driver.execute_script("document.documentElement.style.scrollBehavior = 'auto';")
 
     @property
     def heading(self) -> str:
