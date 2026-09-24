@@ -12,6 +12,10 @@
 
 **Стек:** Python 3.12+, Selenium 4, Pytest 8, Allure (allure-pytest), паттерн Page Object.
 
+**Итого:** 51 тестовый сценарий (53 запуска с учётом параметризации): на каждую из трёх
+страниц задания — 7–10 позитивных и 4–5 негативных, плюс сценарии страницы с формой
+для п.5. Все тесты проходят в Chrome (Windows 11 и Ubuntu в GitHub Actions) и в Firefox (Ubuntu в GitHub Actions).
+
 ## Содержание
 
 - [Структура проекта](#структура-проекта)
@@ -61,7 +65,7 @@ practice-automation-tests/
 подходящую версию автоматически (Selenium Manager).
 
 ```bash
-git clone <ссылка на репозиторий>
+git clone https://github.com/sfhswgshw/practice-automation-tests.git
 cd practice-automation-tests
 
 python -m venv .venv

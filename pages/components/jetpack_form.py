@@ -13,6 +13,8 @@
 
 from __future__ import annotations
 
+import unicodedata
+
 import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -73,7 +75,14 @@ class JetpackForm(BaseElement):
 
     @property
     def success_title(self) -> str:
-        return self.text_of(self.SUCCESS_TITLE)
+        """Заголовок сообщения об успехе без эмодзи.
+
+        В заголовке есть «✨»: Chrome получает его от WordPress картинкой <img>,
+        а Firefox — обычным символом в тексте. Убираем символы-эмодзи (категория So),
+        чтобы проверка одинаково работала в обоих браузерах.
+        """
+        text = self.text_of(self.SUCCESS_TITLE)
+        return "".join(ch for ch in text if unicodedata.category(ch) != "So" and ch != "\ufe0f").strip()
 
     def submitted_values(self) -> dict[str, str]:
         """Сводка отправленных данных: {'Name': 'Ivan', 'Email': ...}."""
